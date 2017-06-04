@@ -8,6 +8,7 @@ func main() {
 	fmt.Println(reduce(in, 0))
 }
 
+// recursively reduce immediate 2 characters
 func reduce(input string, startPos int) string {
 	if len(input) == 0 {
 		return "Empty String"

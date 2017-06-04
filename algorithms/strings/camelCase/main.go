@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	// use regex to identiy how many caps are present. Num words = reg match + 1
 	var in string
 	fmt.Scanf("%s", &in)
 	r := regexp.MustCompile("[A-Z]")

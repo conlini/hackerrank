@@ -3,6 +3,8 @@ package main
 import "fmt"
 
 func main() {
+	// since each sortable value can have 1 -- 10^6 digits, we store each number
+	// in a string
 	var (
 		in   int
 		temp string
@@ -13,6 +15,7 @@ func main() {
 		fmt.Scanf("%s", &temp)
 		vals = append(vals, temp)
 	}
+	// implement sort using merge-sort
 	out := sort(vals)
 	for i := 0; i < in; i++ {
 		fmt.Println(out[i])
@@ -32,6 +35,7 @@ func sort(in []string) []string {
 	}
 
 }
+
 func merge(l, r []string) []string {
 	//	fmt.Println("merging", l, r)
 	if len(l) == 0 {
@@ -73,6 +77,7 @@ func merge(l, r []string) []string {
 	return answer
 }
 
+// compare the two strings. By length first, then char by char
 func compare(l, r string) (string, string) {
 	//	fmt.Printf("comparing %v with %v\n", l, r)
 	if len(l) < len(r) {

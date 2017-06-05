@@ -1,0 +1,34 @@
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+func main() {
+	var (
+		n   int
+		arr []string
+	)
+
+	fmt.Scanf("%d", &n)
+	var temp string
+	fmt.Scanf("%s", &temp)
+	for _, x := range strings.Split(temp, " ") {
+		num, _ := strconv.Atoi(x)
+		arr = append(arr, num)
+	}
+	last := arr[len(arr)-1]
+	for i := len(arr) - 2; i > 0; i-- {
+		if arr[i] > last {
+			// num greater than last. shift right
+			arr[i+1] = arr[i]
+			fmt.Println(arr)
+		} else {
+			// num is now higher than current cell. Stick it in right cell
+			arr[i+1] = last
+		}
+	}
+	fmt.Println(arr)
+}

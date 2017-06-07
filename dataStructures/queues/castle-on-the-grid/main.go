@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"strings"
@@ -41,16 +42,12 @@ func main() {
 	src_dest = s.Text()
 	buildnodes(grid)
 	co_ord := strings.Split(src_dest, " ")
-	//	fmt.Println(nodes)
-	//	fmt.Println(co_ord)
+	//	//fmt.Println(nodes)
+	//	//fmt.Println(co_ord)
 	dest := nodes[fmt.Sprintf("%s-%s", co_ord[2], co_ord[3])]
-	//	fmt.Println(dest)
+	//	//fmt.Println(dest)
 	src := nodes[fmt.Sprintf("%s-%s", co_ord[0], co_ord[1])]
-	if dest != nil {
-		move(dest, src, 0, horizontal)
-		move(dest, src, 0, vertical)
-	}
-	fmt.Println(src.weight)
+	fmt.Println(movebfs(src, dest, 0, n, vertical))
 
 }
 
@@ -66,60 +63,109 @@ const (
 	horizontal
 )
 
-func move(current, dest *node, currentWeight int, d direction) {
-	// set the current weight
-	//	fmt.Printf("Visiting node %d,%d with weight %d\n", current.x, current.y, currentWeight)
-	if !current.allowed {
-		return
+func print(q []*node) {
+	buf := new(bytes.Buffer)
+	for _, n := range q {
+		buf.Write([]byte(fmt.Sprintf("%+v", n)))
+		buf.Write([]byte(","))
 	}
-	if !current.visited || current.weight > currentWeight {
-		current.weight = currentWeight
-		current.visited = true
-	} else {
-		// visited this node
-		return
+	//fmt.Println(string(buf.Bytes()))
+}
+func movebfs(src, dest *node, currentWeight, n int, d direction) int {
+	// lets have a queue.. since everyone wants it
+	q := make([]*node, 0, len(nodes))
+	src.weight = 0
+	q = append(q, src)
+	for len(q) > 0 {
+		//fmt.Println("***************")
+		//print(q)
+		// get top
+		top := q[0]
+		if top.x == dest.x && top.y == dest.y {
+			return top.weight
+		}
+		// re-adust q
+		q = q[1:]
+		//		top.weight = currentWeigh
+		// find all east nodes. They will have a weight of 1
+		y := top.y
+		x := top.x
+		for y < n-1 {
+			y++
+			node := getNode(x, y)
+			//fmt.Println("east node - ", node)
+			if node != nil && !node.visited {
+				if node.allowed {
+					//fmt.Println("adding east node", node)
+					node.weight = top.weight + 1
+					node.visited = true
+					q = append(q, node)
+				} else {
+					break
+				}
+			}
+
+		}
+		// find all west nodes. They will have a weight of 1
+		y = top.y
+		x = top.x
+		for y > 0 {
+			y--
+			node := getNode(x, y)
+			//fmt.Println("west node - ", node)
+			if node != nil && !node.visited {
+				if node.allowed {
+					//fmt.Println("adding westt node", node)
+					node.weight = top.weight + 1
+					node.visited = true
+					q = append(q, node)
+				} else {
+					break
+				}
+			}
+
+		}
+		// find all north nodes. They will have a weight of 1
+		y = top.y
+		x = top.x
+		for x > 0 {
+			x--
+			node := getNode(x, y)
+			//fmt.Println("north node - ", node)
+			if node != nil && !node.visited {
+				if node.allowed {
+					//fmt.Println("adding north node", node)
+					node.weight = top.weight + 1
+					node.visited = true
+					q = append(q, node)
+				} else {
+					break
+				}
+			}
+
+		}
+		// find all south nodes. They will have a weight of 1
+		y = top.y
+		x = top.x
+		for x < n-1 {
+			x++
+			node := getNode(x, y)
+			//fmt.Println("south node - ", node)
+			if node != nil && !node.visited {
+				if node.allowed {
+					//fmt.Println("adding southt node", node)
+					node.weight = top.weight + 1
+					node.visited = true
+					q = append(q, node)
+				} else {
+					break
+				}
+			}
+
+		}
+
 	}
-	if current.x == dest.x && current.y == dest.y {
-		// we reached. lets move on
-		return
-	}
-
-	current.weight = currentWeight
-	nextR := getNode(current.x, current.y+1)
-	nextD := getNode(current.x+1, current.y)
-	nextL := getNode(current.x, current.y-1)
-	nextU := getNode(current.x-1, current.y)
-
-	switch d {
-	case horizontal:
-		if nextR != nil && nextR.allowed {
-			move(nextR, dest, currentWeight, d)
-		}
-		if nextD != nil && nextD.allowed {
-			move(nextD, dest, currentWeight+1, vertical)
-		}
-		if nextL != nil && nextL.allowed {
-			move(nextL, dest, currentWeight, d)
-		}
-		if nextU != nil && nextU.allowed {
-			move(nextU, dest, currentWeight+1, d)
-		}
-
-	case vertical:
-		if nextR != nil && nextR.allowed {
-			move(nextR, dest, currentWeight+1, d)
-		}
-		if nextD != nil && nextD.allowed {
-			move(nextD, dest, currentWeight, vertical)
-		}
-		if nextL != nil && nextL.allowed {
-			move(nextL, dest, currentWeight+1, d)
-		}
-		if nextU != nil && nextU.allowed {
-			move(nextU, dest, currentWeight, d)
-		}
-
-	}
+	return -1
 }
 
 func buildnodes(vals []string) {

@@ -97,9 +97,7 @@ func movebfs(src, dest *node, currentWeight, n int, d direction) int {
 			if node != nil && !node.visited {
 				if node.allowed {
 					//fmt.Println("adding east node", node)
-					node.weight = top.weight + 1
-					node.visited = true
-					q = append(q, node)
+					q = appendToq(q, node, top.weight)
 				} else {
 					break
 				}
@@ -116,9 +114,7 @@ func movebfs(src, dest *node, currentWeight, n int, d direction) int {
 			if node != nil && !node.visited {
 				if node.allowed {
 					//fmt.Println("adding westt node", node)
-					node.weight = top.weight + 1
-					node.visited = true
-					q = append(q, node)
+					q = appendToq(q, node, top.weight)
 				} else {
 					break
 				}
@@ -135,9 +131,7 @@ func movebfs(src, dest *node, currentWeight, n int, d direction) int {
 			if node != nil && !node.visited {
 				if node.allowed {
 					//fmt.Println("adding north node", node)
-					node.weight = top.weight + 1
-					node.visited = true
-					q = append(q, node)
+					q = appendToq(q, node, top.weight)
 				} else {
 					break
 				}
@@ -154,9 +148,7 @@ func movebfs(src, dest *node, currentWeight, n int, d direction) int {
 			if node != nil && !node.visited {
 				if node.allowed {
 					//fmt.Println("adding southt node", node)
-					node.weight = top.weight + 1
-					node.visited = true
-					q = append(q, node)
+					q = appendToq(q, node, top.weight)
 				} else {
 					break
 				}
@@ -166,6 +158,13 @@ func movebfs(src, dest *node, currentWeight, n int, d direction) int {
 
 	}
 	return -1
+}
+
+func appendToq(q []*node, node *node, weight int) []*node {
+	node.weight = weight + 1
+	node.visited = true
+	q = append(q, node)
+	return q
 }
 
 func buildnodes(vals []string) {

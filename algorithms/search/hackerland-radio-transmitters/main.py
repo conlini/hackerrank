@@ -4,39 +4,32 @@ x = map(int,raw_input().strip().split(' '))
 
 
 a = sorted(x)
-print(a)
+#print(a)
 pos = 0
-bases = []
-
-visited = []
+i = 0
 count = 0
-base =False
-
-
-
-for current,i in enumerate(a):
-    if i in visited:
-        continue
-    else:
-        visited.append(i)
-
-        if i - a[pos] > k:
-            if not base:
-
-                pos = current -1
-                bases.append(a[pos])
-                count += 1
-                base = True
-
-            else:
-                pos = current
-                base = False
-        print(i, a[pos], i-a[pos], pos, count)
-if not base: 
-    bases.append(a[-1])
+while i < n:
+    next = a[i] + k
+ #   print(next)
+    while a[i] <= next:
+        i += 1
+        if i > n-1:
+            break
+    i -= 1
+  #  print(i)
     count += 1
-
+    right = a[i] + k
+   # print(right)
+    if right > a[-1]:
+        break
+    while a[i] <= right:
+        i += 1
+        if i >n-1:
+            break
+   # print(i)
+   # print("\n")
+    
 print(count)
-print(bases)
+
         
         

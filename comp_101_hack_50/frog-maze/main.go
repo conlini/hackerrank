@@ -27,7 +27,7 @@ func main() {
 	m, _ = strconv.Atoi(f[1])
 	k, _ = strconv.Atoi(f[2])
 
-	var alex *cell
+	var alex, exit *cell
 	maze := make([][]*cell, n)
 	for i := 0; i < n; i++ {
 		s.Scan()
@@ -37,7 +37,10 @@ func main() {
 			row[j] = &cell{val: v, i1: i, j1: j, probability: 1, i2: -1, j2: -1}
 			if v == "A" {
 				alex = row[j]
+			} else if v == "%" {
+				exit = row[j]
 			}
+
 		}
 		maze[i] = row
 	}
@@ -58,10 +61,10 @@ func main() {
 	for len(q) > 0 {
 
 		current := q[0]
-		if current.val == "%" {
-			fmt.Println(current.probability)
-			return
-		}
+		//		if current.val == "%" {
+		//			fmt.Println(current.probability)
+		//			return
+		//		}
 		next := getNext(current, maze, n, m)
 		if len(next) > 0 {
 			prob := 1.0 / float64(len(next))
@@ -71,7 +74,7 @@ func main() {
 					if v.val != "*" {
 						v.probability = current.probability * prob
 						if v.val == "%" {
-							//					fmt.Println(v.probability, current.probability, prob)
+							fmt.Println(v.probability, current.probability, prob)
 						}
 						if v.j2 != -1 && v.i2 != -1 {
 							jump := maze[v.i2][v.j2]
@@ -90,7 +93,7 @@ func main() {
 		// pop out the the first item off the list
 		q = q[1:]
 	}
-	fmt.Println(0)
+	fmt.Println(exit.probability)
 }
 
 func getNext(current *cell, maze [][]*cell, n, m int) []*cell {

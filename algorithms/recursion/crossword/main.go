@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"strings"
 )
 
@@ -24,7 +25,7 @@ func main() {
 
 }
 
-func getSpaces(board []string, words int) []*space {
+func getSpaces(board []string, words int) map[int][]*space {
 	spaces := make([]*space, 0)
 	for i, v := range board {
 		if index := strings.Index(v, "-"); index != -1 {
@@ -36,4 +37,30 @@ func getSpaces(board []string, words int) []*space {
 			}
 		}
 	}
+}
+
+func check(words, board []string, spaces map[int][]*space) {
+	if len(words) == 0 {
+		fmt.Println(board)
+		return
+	}
+	// get next word
+	next := words[0]
+	remaining := words[1:]
+	// get next available spaces
+	possibleSlots := spaces[len(next)]
+
+	for _, s := range possibleSlots {
+		if !s.occupied {
+			if b, OK := canFit(word, s, board); OK {
+				s.occupied = true
+				check(remaining, b, spaces)
+			}
+		}
+	}
+
+}
+
+func canFit(word string, s *space, board []string) ([]string, OK) {
+	return nil, nil
 }

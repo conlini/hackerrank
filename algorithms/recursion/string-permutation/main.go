@@ -4,6 +4,10 @@ import "fmt"
 
 func main() {
 	s := "abcd"
+	recurse(s)
+}
+
+func recurse(s string) {
 	occupied := make([]bool, len(s))
 	for i := 0; i < len(s); i++ {
 		//		fmt.Println("occupied", occupied)
